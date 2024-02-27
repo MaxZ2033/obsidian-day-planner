@@ -12,6 +12,9 @@
     AlertTriangle,
     Info,
   } from "lucide-svelte";
+  import { Moment } from "moment";
+  import { TFile } from "obsidian";
+  import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
   import { getContext } from "svelte";
 
   import { obsidianContext } from "../../constants";
@@ -62,19 +65,35 @@
   async function goBack() {
     const previousDay = $visibleDayInTimeline.clone().subtract(1, "day");
 
-    const previousNote = await createDailyNoteIfNeeded(previousDay);
-    await obsidianFacade.openFileInEditor(previousNote);
-
+    await handleSwitchDate(previousDay);
     $visibleDayInTimeline = previousDay;
   }
 
   async function goForward() {
     const nextDay = $visibleDayInTimeline.clone().add(1, "day");
 
-    const nextNote = await createDailyNoteIfNeeded(nextDay);
-    await obsidianFacade.openFileInEditor(nextNote);
-
+    await handleSwitchDate(nextDay);
     $visibleDayInTimeline = nextDay;
+  }
+
+  async function handleSwitchDate(day: Moment) {
+    let dailyNote: TFile;
+
+    switch($settings.switchDateBehavior) {
+      case 'open-or-create':
+        dailyNote = await createDailyNoteIfNeeded(day);
+        break;
+      case 'open':
+        dailyNote = getDailyNote(day, getAllDailyNotes());
+        break;
+      case 'do-nothing':
+      default:
+        return;
+    }
+
+    if (dailyNote) {
+      await obsidianFacade.openFileInEditor(dailyNote);
+    }
   }
 
   async function goToToday() {

@@ -114,6 +114,25 @@ export class DayPlannerSettingsTab extends PluginSettingTab {
           });
       });
 
+    new Setting(containerEl)
+      .setName("Date Navigation Behavior")
+      .setDesc("Customize the behavior when switching dates")
+      .addDropdown((component) => {
+        component
+          .addOptions({
+            "open-or-create": "Open or create the daily note",
+            open: "Open the daily note",
+            "do-nothing": "Do nothing",
+          })
+          .setValue(this.plugin.settings().switchDateBehavior)
+          .onChange((value) => {
+            this.update({
+              switchDateBehavior:
+                value as DayPlannerSettings["switchDateBehavior"],
+            });
+          });
+      });
+
     containerEl.createEl("h2", { text: "Date & Time Formats" });
 
     new Setting(containerEl).setName("Hour format").then((component) => {

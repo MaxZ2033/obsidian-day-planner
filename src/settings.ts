@@ -29,6 +29,7 @@ export interface DayPlannerSettings {
   pluginVersion: string;
   showCompletedTasks: boolean;
   showSubtasksInTaskBlocks: boolean;
+  switchDateBehavior: "open-or-create" | "open" | "do-nothing";
 }
 
 export const defaultSettings: DayPlannerSettings = {
@@ -59,6 +60,7 @@ export const defaultSettings: DayPlannerSettings = {
   pluginVersion: "",
   showCompletedTasks: true,
   showSubtasksInTaskBlocks: true,
+  switchDateBehavior: "open-or-create",
 };
 
 export const defaultSettingsForTests = {
