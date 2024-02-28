@@ -1,6 +1,5 @@
 import { groupBy } from "lodash/fp";
 import type { CachedMetadata } from "obsidian";
-import { getAllDailyNotes, getDailyNote } from "obsidian-daily-notes-interface";
 
 import { getHeadingByText, getListItemsUnderHeading } from "../parser/parser";
 import type { DayPlannerSettings } from "../settings";
@@ -54,9 +53,8 @@ export class PlanEditor {
         moved.map(({ task }) => task),
       );
 
-      const noteForFile = getDailyNote(
+      const noteForFile = await createDailyNoteIfNeeded(
         window.moment(moved[0].dayKey),
-        getAllDailyNotes(),
       );
 
       const updated = updateTaskText(task as Task);
